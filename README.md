@@ -17,6 +17,7 @@ The goal is to design a secure, scalable and well-governed AWS environment by se
 - Centralize logging and security monitoring.
 - Control costs through consolidated billing.
 - Restrict resource deployment to approved AWS regions.
+- Define the organization structure using Infrastructure as Code.
 
 ---
 
@@ -57,6 +58,13 @@ aws-multi-account-organization/
 │   ├── deny-root-user-scp.json
 │   └── restrict-regions-scp.json
 │
+├── terraform/
+│   ├── main.tf
+│   ├── organizational-units.tf
+│   ├── accounts.tf
+│   └── scp.tf
+│
+├── LICENSE
 └── README.md
 ```
 
@@ -75,6 +83,32 @@ aws-multi-account-organization/
 
 ---
 
+## Terraform Infrastructure as Code
+
+This project includes Terraform example files to define the AWS Organizations structure as Infrastructure as Code.
+
+Terraform files included:
+
+```text
+terraform/
+├── main.tf
+├── organizational-units.tf
+├── accounts.tf
+└── scp.tf
+```
+
+The Terraform configuration defines:
+
+- AWS Organizations setup.
+- Organizational Units for security, infrastructure and workloads.
+- Example AWS accounts for each environment.
+- Service Control Policies.
+- SCP attachments to Organizational Units.
+
+> Note: This Terraform code is designed as a portfolio and learning example. Before applying it in a real AWS environment, account emails, provider configuration and organizational requirements should be reviewed.
+
+---
+
 ## Service Control Policies Included
 
 This project includes example SCPs for governance and security.
@@ -85,6 +119,12 @@ File:
 
 ```text
 policies/deny-root-user-scp.json
+```
+
+Terraform equivalent:
+
+```text
+terraform/scp.tf
 ```
 
 Purpose:
@@ -99,6 +139,12 @@ File:
 
 ```text
 policies/restrict-regions-scp.json
+```
+
+Terraform equivalent:
+
+```text
+terraform/scp.tf
 ```
 
 Purpose:
@@ -118,6 +164,7 @@ This architecture helps improve cloud security by:
 - Applying preventive controls with SCPs.
 - Reducing the impact of compromised credentials.
 - Avoiding workloads in the Management Account.
+- Managing governance controls through Infrastructure as Code.
 
 ---
 
@@ -144,10 +191,12 @@ Detailed documentation is available here:
 
 ## Project Status
 
-This is a portfolio project designed to demonstrate knowledge of AWS Organizations, multi-account governance, security controls and cloud architecture best practices.
+This is a portfolio project designed to demonstrate knowledge of AWS Organizations, multi-account governance, security controls, Infrastructure as Code and cloud architecture best practices.
 
 ---
 
 ## Author
 
-Created by **Eric Muñoz Aguirre** as part of an AWS Cloud portfolio.
+Created by **Eric Muñoz Aguirre**.
+
+This project is part of my AWS Cloud portfolio, focused on cloud governance, security, Infrastructure as Code and multi-account architecture.
