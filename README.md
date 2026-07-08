@@ -56,8 +56,9 @@ aws-multi-account-organization/
 ├── docs/
 │   ├── implementation-guide.md
 │   ├── security-controls.md
-│   └── lessons-learned.md
-│
+│   ├── lessons-learned.md
+│   └── scaling-to-enterprise.md
+│    
 ├── policies/
 │   ├── deny-root-user-scp.json
 │   └── restrict-regions-scp.json
@@ -199,6 +200,7 @@ Detailed documentation is available here:
 - [Architecture Diagram](architecture/organization-diagram.md)
 - [Security Controls](docs/security-controls.md)
 - [Lessons Learned](docs/lessons-learned.md)
+- [Scaling to Enterprise](docs/scaling-to-enterprise.md)
 - [Terraform Documentation](terraform/README.md)
 - [Security Policy](SECURITY.md)
 
