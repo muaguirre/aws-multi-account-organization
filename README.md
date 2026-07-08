@@ -1,5 +1,4 @@
 # AWS Multi-Account Organization Architecture
-# AWS Multi-Account Organization Architecture
 
 ![AWS](https://img.shields.io/badge/AWS-Organizations-orange)
 ![Terraform](https://img.shields.io/badge/Terraform-IaC-purple)
