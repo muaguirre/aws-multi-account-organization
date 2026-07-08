@@ -4,7 +4,7 @@
 
 This project presents a multi-account cloud architecture using **AWS Organizations**.
 
-The goal is to design a secure, scalable and well-governed AWS environment by separating workloads into multiple accounts, applying centralized security controls and improving cost visibility through consolidated billing.
+The goal is to design a secure, scalable and well-governed AWS environment by separating cloud responsibilities into multiple AWS accounts, applying centralized security controls and improving cost visibility through consolidated billing.
 
 ---
 
@@ -18,6 +18,7 @@ The goal is to design a secure, scalable and well-governed AWS environment by se
 - Control costs through consolidated billing.
 - Restrict resource deployment to approved AWS regions.
 - Define the organization structure using Infrastructure as Code.
+- Separate development and production environments into dedicated Organizational Units.
 
 ---
 
@@ -35,9 +36,10 @@ AWS Organizations
 ├── Infrastructure OU
 │   └── Shared Services Account
 │
-└── Workloads OU
-    ├── Development Account
-    ├── Testing Account
+├── Development OU
+│   └── Development Account
+│
+└── Production OU
     └── Production Account
 ```
 
@@ -52,7 +54,9 @@ aws-multi-account-organization/
 │   └── organization-diagram.md
 │
 ├── docs/
-│   └── implementation-guide.md
+│   ├── implementation-guide.md
+│   ├── security-controls.md
+│   └── lessons-learned.md
 │
 ├── policies/
 │   ├── deny-root-user-scp.json
@@ -62,8 +66,11 @@ aws-multi-account-organization/
 │   ├── main.tf
 │   ├── organizational-units.tf
 │   ├── accounts.tf
-│   └── scp.tf
+│   ├── scp.tf
+│   └── README.md
 │
+├── .gitignore
+├── SECURITY.md
 ├── LICENSE
 └── README.md
 ```
@@ -75,6 +82,7 @@ aws-multi-account-organization/
 - AWS Organizations
 - Service Control Policies
 - AWS Identity and Access Management
+- AWS IAM Identity Center
 - AWS CloudTrail
 - AWS Config
 - AWS Security Hub
@@ -94,14 +102,15 @@ terraform/
 ├── main.tf
 ├── organizational-units.tf
 ├── accounts.tf
-└── scp.tf
+├── scp.tf
+└── README.md
 ```
 
 The Terraform configuration defines:
 
 - AWS Organizations setup.
-- Organizational Units for security, infrastructure and workloads.
-- Example AWS accounts for each environment.
+- Organizational Units for security, infrastructure, development and production.
+- Example AWS accounts for each area of the organization.
 - Service Control Policies.
 - SCP attachments to Organizational Units.
 
@@ -159,8 +168,9 @@ Purpose:
 
 This architecture helps improve cloud security by:
 
-- Isolating production, testing and development environments.
-- Centralizing logs in a dedicated account.
+- Isolating security, infrastructure, development and production responsibilities.
+- Centralizing logs in a dedicated Log Archive Account.
+- Centralizing security monitoring in a dedicated Security Account.
 - Applying preventive controls with SCPs.
 - Reducing the impact of compromised credentials.
 - Avoiding workloads in the Management Account.
@@ -173,10 +183,11 @@ This architecture helps improve cloud security by:
 This architecture improves cost management by:
 
 - Using consolidated billing.
-- Separating costs by environment.
+- Separating costs by account and environment.
 - Improving visibility across accounts.
 - Supporting budgets and alerts per account.
 - Reducing unauthorized deployments in non-approved regions.
+- Supporting future FinOps practices through account separation and tagging.
 
 ---
 
@@ -186,12 +197,25 @@ Detailed documentation is available here:
 
 - [Implementation Guide](docs/implementation-guide.md)
 - [Architecture Diagram](architecture/organization-diagram.md)
+- [Security Controls](docs/security-controls.md)
+- [Lessons Learned](docs/lessons-learned.md)
+- [Terraform Documentation](terraform/README.md)
+- [Security Policy](SECURITY.md)
 
 ---
 
 ## Project Status
 
 This is a portfolio project designed to demonstrate knowledge of AWS Organizations, multi-account governance, security controls, Infrastructure as Code and cloud architecture best practices.
+
+Future improvements may include:
+
+- Real AWS console screenshots.
+- Terraform plan and apply screenshots.
+- Additional SCP examples.
+- AWS IAM Identity Center documentation.
+- CloudTrail and AWS Config centralized logging examples.
+- Enterprise scaling model for larger organizations.
 
 ---
 
