@@ -62,7 +62,7 @@ resource "aws_organizations_policy" "restrict_regions" {
   })
 }
 
-# Attach SCPs to Organizational Units
+# Attach deny root user SCP to all main Organizational Units
 
 resource "aws_organizations_policy_attachment" "deny_root_user_security" {
   policy_id = aws_organizations_policy.deny_root_user.id
@@ -74,12 +74,24 @@ resource "aws_organizations_policy_attachment" "deny_root_user_infrastructure" {
   target_id = aws_organizations_organizational_unit.infrastructure.id
 }
 
-resource "aws_organizations_policy_attachment" "deny_root_user_workloads" {
+resource "aws_organizations_policy_attachment" "deny_root_user_development" {
   policy_id = aws_organizations_policy.deny_root_user.id
-  target_id = aws_organizations_organizational_unit.workloads.id
+  target_id = aws_organizations_organizational_unit.development.id
 }
 
-resource "aws_organizations_policy_attachment" "restrict_regions_workloads" {
+resource "aws_organizations_policy_attachment" "deny_root_user_production" {
+  policy_id = aws_organizations_policy.deny_root_user.id
+  target_id = aws_organizations_organizational_unit.production.id
+}
+
+# Attach region restriction SCP to workload-related Organizational Units
+
+resource "aws_organizations_policy_attachment" "restrict_regions_development" {
   policy_id = aws_organizations_policy.restrict_regions.id
-  target_id = aws_organizations_organizational_unit.workloads.id
+  target_id = aws_organizations_organizational_unit.development.id
+}
+
+resource "aws_organizations_policy_attachment" "restrict_regions_production" {
+  policy_id = aws_organizations_policy.restrict_regions.id
+  target_id = aws_organizations_organizational_unit.production.id
 }
