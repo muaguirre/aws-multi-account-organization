@@ -99,12 +99,14 @@ This project includes Terraform example files to define the AWS Organizations st
 Terraform files included:
 
 ```text
-terraform/
-├── main.tf
-├── organizational-units.tf
-├── accounts.tf
-├── scp.tf
-└── README.md
+├── terraform/
+│   ├── main.tf
+│   ├── variables.tf
+│   ├── outputs.tf
+│   ├── organizational-units.tf
+│   ├── accounts.tf
+│   ├── scp.tf
+│   └── README.md
 ```
 
 The Terraform configuration defines:
@@ -114,6 +116,8 @@ The Terraform configuration defines:
 - Example AWS accounts for each area of the organization.
 - Service Control Policies.
 - SCP attachments to Organizational Units.
+- Reusable variables for provider region, approved regions, account email domain and common tags.
+- Outputs for organization, OU, account and SCP identifiers.
 
 > Note: This Terraform code is designed as a portfolio and learning example. Before applying it in a real AWS environment, account emails, provider configuration and organizational requirements should be reviewed.
 
