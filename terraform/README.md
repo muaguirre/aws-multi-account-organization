@@ -39,7 +39,8 @@ Creates the main Organizational Units:
 
 - Security
 - Infrastructure
-- Workloads
+- Development
+- Production
 
 ### accounts.tf
 
@@ -49,7 +50,6 @@ Defines example AWS accounts for each area of the organization:
 - Log Archive Account
 - Shared Services Account
 - Development Account
-- Testing Account
 - Production Account
 
 ### scp.tf
@@ -60,6 +60,42 @@ Included SCPs:
 
 - Deny root user actions
 - Restrict deployments outside approved European regions
+
+---
+
+## Organizational Unit Design
+
+```text
+AWS Organizations
+│
+├── Security OU
+│   ├── Security Account
+│   └── Log Archive Account
+│
+├── Infrastructure OU
+│   └── Shared Services Account
+│
+├── Development OU
+│   └── Development Account
+│
+└── Production OU
+    └── Production Account
+```
+
+---
+
+## SCP Attachment Strategy
+
+The Terraform configuration applies SCPs as follows:
+
+```text
+Security OU        → Deny root user actions
+Infrastructure OU  → Deny root user actions
+Development OU     → Deny root user actions + restrict regions
+Production OU      → Deny root user actions + restrict regions
+```
+
+This allows common security guardrails to be applied across the organization while keeping workload-related restrictions focused on development and production environments.
 
 ---
 
