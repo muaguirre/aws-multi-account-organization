@@ -201,6 +201,12 @@ The root user has unrestricted access to the AWS account. If compromised, it can
 
 The `deny-root-user-scp.json` policy denies actions performed by the AWS root user.
 
+### Important Scope Note
+
+This SCP is intended to restrict root user actions in AWS member accounts.
+
+Service Control Policies do not affect the Management Account. For the Management Account, root user protection must be handled through operational security best practices such as MFA, restricted access and avoiding root access keys.
+
 ---
 
 ## Control 10: Region Restriction
