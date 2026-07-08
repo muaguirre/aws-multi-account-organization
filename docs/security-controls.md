@@ -12,11 +12,11 @@ The objective is to define preventive, detective and organizational controls for
 
 ### Purpose
 
-The Management Account should only be used for AWS Organizations administration and consolidated billing.
+The Management Account should only be used for AWS Organizations administration, consolidated billing and organization-level governance.
 
 ### Risk Addressed
 
-Running workloads in the Management Account increases the impact of a security incident.
+Running workloads in the Management Account increases the blast radius of a security incident and exposes the most privileged account in the organization.
 
 ### Implementation
 
@@ -24,10 +24,30 @@ Running workloads in the Management Account increases the impact of a security i
 - Restrict access to a small number of administrators.
 - Enable MFA for privileged users.
 - Use the Management Account only for organization-level tasks.
+- Use delegated administration where possible.
 
 ---
 
-## Control 2: Dedicated Security Account
+## Control 2: Dedicated Security OU
+
+### Purpose
+
+The Security OU contains accounts focused on security monitoring, auditability and incident response.
+
+### Risk Addressed
+
+Without dedicated security accounts, monitoring and audit data may be spread across multiple workload accounts, reducing visibility and increasing operational risk.
+
+### Implementation
+
+The Security OU contains:
+
+- Security Account
+- Log Archive Account
+
+---
+
+## Control 3: Dedicated Security Account
 
 ### Purpose
 
@@ -45,10 +65,11 @@ The Security Account can be used for:
 - Amazon GuardDuty
 - IAM Access Analyzer
 - Centralized incident response
+- Security findings aggregation
 
 ---
 
-## Control 3: Dedicated Log Archive Account
+## Control 4: Dedicated Log Archive Account
 
 ### Purpose
 
@@ -66,10 +87,84 @@ The Log Archive Account can be used for:
 - AWS Config logs
 - Long-term audit storage
 - Separation of logs from application accounts
+- Protection of audit evidence
 
 ---
 
-## Control 4: Service Control Policies
+## Control 5: Infrastructure OU Separation
+
+### Purpose
+
+The Infrastructure OU contains shared services used by multiple environments.
+
+### Risk Addressed
+
+Mixing shared services with production or development workloads can make governance, access control and troubleshooting more difficult.
+
+### Implementation
+
+The Infrastructure OU contains:
+
+- Shared Services Account
+
+This account can host shared services such as:
+
+- Networking components
+- Shared DNS resources
+- CI/CD tooling
+- Centralized platform services
+
+---
+
+## Control 6: Development and Production Separation
+
+### Purpose
+
+Development and production workloads should be separated into different Organizational Units and accounts.
+
+### Risk Addressed
+
+A misconfiguration or incident in a development environment should not directly affect production workloads.
+
+### Implementation
+
+The architecture separates:
+
+- Development OU
+  - Development Account
+- Production OU
+  - Production Account
+
+This allows different policies, budgets and access controls to be applied depending on the environment.
+
+---
+
+## Control 7: Production Account Protection
+
+### Purpose
+
+The Production Account should have stricter security and access controls than development environments.
+
+### Risk Addressed
+
+Production workloads are usually business-critical. Misconfigurations, excessive permissions or accidental changes can cause service outages or security incidents.
+
+### Implementation
+
+Recommended production controls include:
+
+- Restricted administrative access
+- Stronger SCP guardrails
+- Centralized logging
+- Centralized monitoring
+- Change control
+- Budget alerts
+- Anomaly detection
+- MFA for privileged access
+
+---
+
+## Control 8: Service Control Policies
 
 ### Purpose
 
@@ -86,9 +181,13 @@ This project includes the following SCP examples:
 - Deny root user actions
 - Restrict AWS regions outside approved European regions
 
+Terraform implementation:
+
+- `terraform/scp.tf`
+
 ---
 
-## Control 5: Root User Usage Prevention
+## Control 9: Root User Usage Prevention
 
 ### Purpose
 
@@ -104,7 +203,7 @@ The `deny-root-user-scp.json` policy denies actions performed by the AWS root us
 
 ---
 
-## Control 6: Region Restriction
+## Control 10: Region Restriction
 
 ### Purpose
 
@@ -128,27 +227,7 @@ Approved regions:
 
 ---
 
-## Control 7: Environment Isolation
-
-### Purpose
-
-Development, testing and production environments should be separated into different AWS accounts.
-
-### Risk Addressed
-
-A misconfiguration or incident in a development environment should not directly affect production workloads.
-
-### Implementation
-
-The Workloads OU contains separate accounts for:
-
-- Development
-- Testing
-- Production
-
----
-
-## Control 8: Infrastructure as Code Governance
+## Control 11: Infrastructure as Code Governance
 
 ### Purpose
 
@@ -172,4 +251,4 @@ Terraform files define:
 
 ## Summary
 
-This project applies a layered security approach using account separation, centralized monitoring, dedicated log storage, preventive SCP controls and Infrastructure as Code.
+This project applies a layered security approach using account separation, dedicated Organizational Units, centralized monitoring, dedicated log storage, preventive SCP controls and Infrastructure as Code.
