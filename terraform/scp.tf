@@ -48,13 +48,7 @@ resource "aws_organizations_policy" "restrict_regions" {
         Resource = "*"
         Condition = {
           StringNotEquals = {
-            "aws:RequestedRegion" = [
-              "eu-west-1",
-              "eu-west-2",
-              "eu-west-3",
-              "eu-south-1",
-              "eu-central-1"
-            ]
+            "aws:RequestedRegion" = var.approved_regions
           }
         }
       }
