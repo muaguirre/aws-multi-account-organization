@@ -9,6 +9,7 @@ resource "aws_organizations_account" "security" {
   tags = {
     Environment = "Security"
     Purpose     = "Centralized security monitoring"
+    ManagedBy   = "Terraform"
   }
 }
 
@@ -20,6 +21,7 @@ resource "aws_organizations_account" "log_archive" {
   tags = {
     Environment = "Security"
     Purpose     = "Centralized logging and audit storage"
+    ManagedBy   = "Terraform"
   }
 }
 
@@ -31,38 +33,30 @@ resource "aws_organizations_account" "shared_services" {
   tags = {
     Environment = "Infrastructure"
     Purpose     = "Shared networking and platform services"
+    ManagedBy   = "Terraform"
   }
 }
 
 resource "aws_organizations_account" "development" {
   name      = "Development Account"
   email     = "development@example.com"
-  parent_id = aws_organizations_organizational_unit.workloads.id
+  parent_id = aws_organizations_organizational_unit.development.id
 
   tags = {
     Environment = "Development"
-    Purpose     = "Development workloads"
-  }
-}
-
-resource "aws_organizations_account" "testing" {
-  name      = "Testing Account"
-  email     = "testing@example.com"
-  parent_id = aws_organizations_organizational_unit.workloads.id
-
-  tags = {
-    Environment = "Testing"
-    Purpose     = "Testing and QA workloads"
+    Purpose     = "Development and non-production workloads"
+    ManagedBy   = "Terraform"
   }
 }
 
 resource "aws_organizations_account" "production" {
   name      = "Production Account"
   email     = "production@example.com"
-  parent_id = aws_organizations_organizational_unit.workloads.id
+  parent_id = aws_organizations_organizational_unit.production.id
 
   tags = {
     Environment = "Production"
     Purpose     = "Production workloads"
+    ManagedBy   = "Terraform"
   }
 }
