@@ -4,7 +4,7 @@
 
 This document explains the implementation approach for a multi-account AWS environment using AWS Organizations.
 
-The objective of this design is to improve governance, security, billing control and environment separation by using multiple AWS accounts grouped into Organizational Units.
+The objective of this design is to improve governance, security, billing control and environment separation by using multiple AWS accounts grouped into dedicated Organizational Units.
 
 ---
 
@@ -24,9 +24,10 @@ AWS Organizations
 ├── Infrastructure OU
 │   └── Shared Services Account
 │
-└── Workloads OU
-    ├── Development Account
-    ├── Testing Account
+├── Development OU
+│   └── Development Account
+│
+└── Production OU
     └── Production Account
 ```
 
@@ -44,6 +45,7 @@ Recommended usage:
 - Create and organize AWS accounts.
 - Apply Service Control Policies.
 - Avoid running workloads in this account.
+- Enable MFA for privileged access.
 
 ---
 
@@ -60,6 +62,7 @@ Used for:
 - Amazon GuardDuty.
 - IAM Access Analyzer.
 - Centralized incident response.
+- Security findings aggregation.
 
 ### Log Archive Account
 
@@ -69,45 +72,74 @@ Used for:
 - AWS Config logs.
 - Long-term audit storage.
 - Separation of logs from workload accounts.
+- Protection of audit evidence.
 
 ---
 
 ## 5. Infrastructure OU
 
-The Infrastructure OU contains shared services used by several environments.
+The Infrastructure OU contains shared services used by multiple environments.
 
 ### Shared Services Account
 
 Used for:
 
-- Networking components.
+- Shared networking components.
 - Shared DNS resources.
 - CI/CD tools.
-- Centralized services used by development, testing and production.
+- Centralized platform services.
+- Common services used by development and production environments.
 
 ---
 
-## 6. Workloads OU
+## 6. Development OU
 
-The Workloads OU contains the application environments.
+The Development OU contains non-production workloads.
 
 ### Development Account
 
-Used by developers to test and deploy non-production resources.
+Used for:
 
-### Testing Account
+- Application development.
+- Testing new cloud services.
+- Experimentation.
+- Non-production deployments.
+- Lower-risk environments.
 
-Used for validation, QA and pre-production testing.
+Recommended controls:
 
-### Production Account
-
-Used only for production workloads.
-
-This account should have stricter controls and fewer users with administrative access.
+- Region restrictions.
+- Budget alerts.
+- Basic SCP guardrails.
+- Controlled access for developers.
 
 ---
 
-## 7. Service Control Policies
+## 7. Production OU
+
+The Production OU contains production workloads.
+
+### Production Account
+
+Used for:
+
+- Production applications.
+- Business-critical workloads.
+- Customer-facing services.
+- Stable and controlled deployments.
+
+Recommended controls:
+
+- Stricter SCPs.
+- Restricted administrative access.
+- Centralized monitoring.
+- Centralized logging.
+- Change control.
+- Budget and anomaly detection alerts.
+
+---
+
+## 8. Service Control Policies
 
 Service Control Policies define the maximum permissions available to accounts inside the organization.
 
@@ -120,9 +152,38 @@ Examples included in this project:
 - `deny-root-user-scp.json`
 - `restrict-regions-scp.json`
 
+Terraform implementation:
+
+- `terraform/scp.tf`
+
 ---
 
-## 8. Security Benefits
+## 9. Terraform Implementation
+
+This project includes Terraform example code to define the AWS Organizations structure as Infrastructure as Code.
+
+Terraform files included:
+
+```text
+terraform/
+├── main.tf
+├── organizational-units.tf
+├── accounts.tf
+├── scp.tf
+└── README.md
+```
+
+The Terraform configuration defines:
+
+- AWS Organization setup.
+- Organizational Units.
+- Example AWS accounts.
+- Service Control Policies.
+- SCP attachments to OUs.
+
+---
+
+## 10. Security Benefits
 
 This architecture improves security by:
 
@@ -132,10 +193,11 @@ This architecture improves security by:
 - Preventing the use of the root user.
 - Restricting deployments to approved regions.
 - Keeping audit logs isolated from workload accounts.
+- Applying different controls to development and production environments.
 
 ---
 
-## 9. Cost Control Benefits
+## 11. Cost Control Benefits
 
 This architecture improves cost control by:
 
@@ -143,11 +205,29 @@ This architecture improves cost control by:
 - Separating costs by account and environment.
 - Making it easier to apply budgets and alerts.
 - Reducing accidental deployments in unauthorized regions.
+- Supporting future FinOps practices through tagging and account separation.
 
 ---
 
-## 10. Conclusion
+## 12. Scaling Considerations
+
+This architecture can scale to larger organizations by adding more OUs and accounts.
+
+Examples:
+
+- Separate OUs per business unit.
+- Separate accounts per application.
+- Separate accounts per environment.
+- Dedicated compliance accounts.
+- Dedicated networking accounts.
+- Dedicated sandbox accounts.
+
+A company with 100 AWS accounts could use the same model and expand it with additional layers of governance.
+
+---
+
+## 13. Conclusion
 
 A multi-account AWS Organization provides a scalable and secure foundation for cloud environments.
 
-This design follows AWS best practices for governance, environment isolation, centralized security and billing management.
+This design follows AWS best practices for governance, environment isolation, centralized security, cost control and Infrastructure as Code.
