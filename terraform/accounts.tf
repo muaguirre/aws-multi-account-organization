@@ -3,60 +3,55 @@
 
 resource "aws_organizations_account" "security" {
   name      = "Security Account"
-  email     = "security@example.com"
+  email     = "security@${var.account_email_domain}"
   parent_id = aws_organizations_organizational_unit.security.id
 
-  tags = {
+  tags = merge(var.common_tags, {
     Environment = "Security"
     Purpose     = "Centralized security monitoring"
-    ManagedBy   = "Terraform"
-  }
+  })
 }
 
 resource "aws_organizations_account" "log_archive" {
   name      = "Log Archive Account"
-  email     = "log-archive@example.com"
+  email     = "log-archive@${var.account_email_domain}"
   parent_id = aws_organizations_organizational_unit.security.id
 
-  tags = {
+  tags = merge(var.common_tags, {
     Environment = "Security"
     Purpose     = "Centralized logging and audit storage"
-    ManagedBy   = "Terraform"
-  }
+  })
 }
 
 resource "aws_organizations_account" "shared_services" {
   name      = "Shared Services Account"
-  email     = "shared-services@example.com"
+  email     = "shared-services@${var.account_email_domain}"
   parent_id = aws_organizations_organizational_unit.infrastructure.id
 
-  tags = {
+  tags = merge(var.common_tags, {
     Environment = "Infrastructure"
     Purpose     = "Shared networking and platform services"
-    ManagedBy   = "Terraform"
-  }
+  })
 }
 
 resource "aws_organizations_account" "development" {
   name      = "Development Account"
-  email     = "development@example.com"
+  email     = "development@${var.account_email_domain}"
   parent_id = aws_organizations_organizational_unit.development.id
 
-  tags = {
+  tags = merge(var.common_tags, {
     Environment = "Development"
     Purpose     = "Development and non-production workloads"
-    ManagedBy   = "Terraform"
-  }
+  })
 }
 
 resource "aws_organizations_account" "production" {
   name      = "Production Account"
-  email     = "production@example.com"
+  email     = "production@${var.account_email_domain}"
   parent_id = aws_organizations_organizational_unit.production.id
 
-  tags = {
+  tags = merge(var.common_tags, {
     Environment = "Production"
     Purpose     = "Production workloads"
-    ManagedBy   = "Terraform"
-  }
+  })
 }
